@@ -57,7 +57,7 @@ export default function UserView(props) {
                                 index += 1
                                 return (
                                     <div key={index}>
-                                        <Card.Subtitle className="mt-2 mb-2"><i className="fas fa-folder-open"></i> <span className="text-muted font-weight-light">{item.name}</span></Card.Subtitle>
+                                        <Card.Subtitle className="mt-2 mb-2"><i className="fas fa-folder-open"></i> <span className="text-muted font-weight-light">{item.name === null ? 'No repository found' : item.name}</span></Card.Subtitle>
                                         <hr></hr>
                                     </div>
                                 )
