@@ -139,7 +139,7 @@ export default function User() {
             }
         }
         catch (error) {
-            setMessage(error.message);
+            setMessage('Something went wrong');
             setAlertType('danger')
             setIconType("fas fa-exclamation-triangle")
             setResult('')
