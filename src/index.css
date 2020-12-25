@@ -91,6 +91,7 @@ body {
 }
 
 .card {
+    display: inline;
     margin: auto;
 }
 
