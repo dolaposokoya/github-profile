@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios'
-import UserRepo from '../Repositories/UserRepo'
-import { Card, Container, Button, Image } from 'react-bootstrap'
-
+import UserView from '../UserView/UserView'
+import { Container } from 'react-bootstrap'
+import SearchResult from '../SearchResult/SearchResult'
+import Modal from "../Modal/Modal";
 
 export default function Search(props) {
 
@@ -28,45 +29,6 @@ export default function Search(props) {
         return users
     }
 
-    const storeUser = async (user) => {
-        const users = await getUsers()
-        const { id, avatar_url, name, repository } = user
-        console.log('Lenght', users.length)
-        if (users.length === 0) {
-            users.push({ id, avatar_url, name, repository })
-            localStorage.setItem('users', JSON.stringify(users))
-            setMessage('User Added');
-            setAlertType('success')
-            setIconType("far fa-check-circle")
-            setTimeout(() => setMessage(''), 5000);
-            const userDeatils = JSON.parse(localStorage.getItem('users'))
-            setRepo(userDeatils)
-        }
-        else if (users.length > 0) {
-            users.forEach((item) => {
-                if (parseInt(item.id) === parseInt(id)) {
-                    console.log('Check user match', item.id, 'User id', id)
-                    setMessage('User Present');
-                    setAlertType('info')
-                    setIconType("fas fa-info-circle")
-                    setTimeout(() => setMessage(''), 5000);
-                }
-                else if (parseInt(item.id) !== parseInt(id)) {
-                    console.log('Check user not match', item.id)
-                    users.push(user)
-                    localStorage.setItem('users', JSON.stringify(users))
-                    setMessage('User Added');
-                    setAlertType('success')
-                    setIconType("far fa-check-circle")
-                    setTimeout(() => setMessage(''), 5000);
-                    const userDeatils = JSON.parse(localStorage.getItem('users'))
-                    setRepo(userDeatils)
-                }
-            })
-        }
-    }
-
-    // const removeUser = async ()
     const getUserInfo = async (event) => {
         try {
             let request = event.target.value
@@ -146,6 +108,7 @@ export default function Search(props) {
 
     return (
         <div>
+            {message && <Modal iconType={iconType} message={message} alertType={alertType} />}
             <div className="alertMessage">
                 {message && <div className={`message alert alert-${alertType}`} role="alert"><i className={`${iconType}`}></i> {message}</div>}
             </div>
@@ -155,15 +118,8 @@ export default function Search(props) {
                         <input style={{ padding: '15px 15px 15px 5px', width: '100%', border: 'none', borderRadius: '5px' }} className="search" placeholder="Search for a user" onKeyUp={(e) => getUserInfo(e)} />
                     </div>
                 </div>
-                {result && <Card className="container-fluid mt-5 box">
-                    <div className="user-box">
-                        <Image src={result.avatar_url} roundedCircle />
-                        <Card.Title>Name: {result.name}</Card.Title>
-                        <Card.Title>Repositries: {result.public_repos}</Card.Title>
-                        <Button type="button" variannt="primary" onClick={() => storeUser(result)}>Add User</Button>
-                    </div>
-                </Card>}
-            </div> : <Container className="my-4"> <UserRepo resourceType={resourceType} getUsers={getUsers} userDeatils={repo} /></Container>}
+                {result && <Container><SearchResult getUsers={getUsers} result={result} /></Container>}
+            </div> : <Container className="my-4"> <UserView resourceType={resourceType} getUsers={getUsers} userDeatils={repo} /></Container>}
         </div>
     )
 }

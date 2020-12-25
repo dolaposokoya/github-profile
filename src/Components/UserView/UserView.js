@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Button, Image } from 'react-bootstrap'
-
-export default function UserRepo(props) {
+import Modal from "../Modal/Modal";
+export default function UserView(props) {
 
     const { resourceType, userDeatils } = props
 
@@ -42,18 +42,16 @@ export default function UserRepo(props) {
 
     return (
         <div>
-            <div className="alertMessage">
-                {message && <div className={`message alert alert-${alertType}`} role="alert"><i className={`${iconType}`}></i> {message}</div>}
-            </div>
+            {message && <Modal iconType={iconType} message={message} alertType={alertType} />}
             {repo && repo.map((item, index) => {
                 return (
-                    <Card className="mb-2" key={index}>
+                    <Card className="mb-2" key={index} style={{ maxWidth: '600px' }}>
                         <Card.Body>
                             <div className="d-flex justify-content-between">
                                 <div>
-                                    <Card.Title className="mb-5">Repository of <span className="text-muted fonwt-weight-light">{item.name}</span></Card.Title>
+                                    <Card.Title className="mb-5">Repository of <span className="text-muted fonwt-weight-light">{item.name === null ? 'Name not defined' : item.name}</span></Card.Title>
                                 </div>
-                                <Image roundedCircle src={item.avatar_url} style={{width: '55px', height: '55px'}} />
+                                <Image roundedCircle src={item.avatar_url} style={{ width: '55px', height: '55px' }} />
                             </div>
                             {item.repository && item.repository.map((item, index) => {
                                 index += 1
