@@ -1,3 +1,11 @@
+:root {
+    --font: 'Roboto Mono', monospace;
+}
+
+* {
+    font-family: var(--font)
+}
+
 body {
     background: rgb(202, 201, 201);
     padding: 15px;
