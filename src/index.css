@@ -30,10 +30,6 @@ body {
     font-size: 17px;
     border-radius: 7px;
     background-color: #ffa270;
-    /* animation-name: alert;
-    animation-duration: 5s;
-    animation-timing-function: ease-in-out;
-    animation-direction: alternate; */
 }
 
 .alert-info {
@@ -41,20 +37,12 @@ body {
     font-size: 17px;
     border-radius: 7px;
     background-color: rgb(161, 228, 255);
-    /* animation-name: alert;
-    animation-duration: 5s;
-    animation-timing-function: ease-in-out;
-    animation-direction: alternate; */
 }
 
 .alert-success {
     color: black;
     font-size: 20px;
     border-radius: 7px;
-    /* animation-name: alert;
-    animation-duration: 5s;
-    animation-timing-function: ease-in-out;
-    animation-direction: alternate */
 }
 
 @keyframes alert {
@@ -85,14 +73,14 @@ body {
 .box {
     margin-top: 1000px;
     margin: auto;
-    max-width: 500px;
+    max-width: 300px;
     padding: 0;
 }
 
 .repo {
-    margin-top: 1000px;
     margin: auto;
-    max-width: 500px;
+    max-width: 800px;
+    margin-bottom: 50px;
     background: rgb(233, 233, 230);
     padding: 25px;
     border-radius: 10px;
@@ -102,8 +90,13 @@ body {
     padding-bottom: 20px;
 }
 
+.card {
+    max-width: 700px;
+    margin: auto;
+}
+
 .search-bar {
-    margin-top: 1000px;
+    margin: 1000px 0;
     margin: auto;
     max-width: 500px;
     padding: 0;

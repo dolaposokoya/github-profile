@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import $ from 'jquery';
 import axios from 'axios'
 import UserRepo from '../Repositories/UserRepo'
+import { Card, Container, Button, Image } from 'react-bootstrap'
 
-export default function User() {
-    console.log('Loaded')
+
+export default function Search(props) {
+
+    const { resourceType } = props
     const baseUrl = 'https://api.github.com/users';
     const client_id = '192c6b5772044f48a9ba'
     const client_secret = '40c2eefc4ffaa2cf7544e3ac83f1939e8d225d66'
@@ -28,48 +30,40 @@ export default function User() {
 
     const storeUser = async (user) => {
         const users = await getUsers()
-        const { id, avatar_url, name, public_repos } = user
+        const { id, avatar_url, name, repository } = user
+        console.log('Lenght', users.length)
         if (users.length === 0) {
-            users.push({ id: id, avatar_url: avatar_url, name, public_repos })
+            users.push({ id, avatar_url, name, repository })
             localStorage.setItem('users', JSON.stringify(users))
             setMessage('User Added');
             setAlertType('success')
             setIconType("far fa-check-circle")
             setTimeout(() => setMessage(''), 5000);
+            const userDeatils = JSON.parse(localStorage.getItem('users'))
+            setRepo(userDeatils)
         }
-        else {
+        else if (users.length > 0) {
             users.forEach((item) => {
-                console.log('Check user', user)
-                if (item.id === id) {
+                if (parseInt(item.id) === parseInt(id)) {
+                    console.log('Check user match', item.id, 'User id', id)
                     setMessage('User Present');
                     setAlertType('info')
                     setIconType("fas fa-info-circle")
                     setTimeout(() => setMessage(''), 5000);
                 }
-                else {
+                else if (parseInt(item.id) !== parseInt(id)) {
+                    console.log('Check user not match', item.id)
                     users.push(user)
                     localStorage.setItem('users', JSON.stringify(users))
                     setMessage('User Added');
                     setAlertType('success')
                     setIconType("far fa-check-circle")
                     setTimeout(() => setMessage(''), 5000);
+                    const userDeatils = JSON.parse(localStorage.getItem('users'))
+                    setRepo(userDeatils)
                 }
             })
         }
-    }
-
-    const deleteUser = async (id) => {
-        const users = await getUsers()
-        users.forEach((user, index) => {
-            if (user.id === id) {
-                users.splice(index, 1)
-            }
-        })
-        localStorage.setItem('users', JSON.stringify(users))
-        setMessage('User Deleted');
-        setAlertType('success')
-        setIconType("far fa-check-circle")
-        setTimeout(() => setMessage(''), 5000);
     }
 
     // const removeUser = async ()
@@ -84,14 +78,14 @@ export default function User() {
                     setAlertType('info')
                     setIconType("fas fa-info-circle")
                     setResult('')
-                    setRepo('')
                     setTimeout(() => setMessage(''), 5000);
                 }
                 else if (response.status === 200) {
                     const { id, avatar_url, name, public_repos } = data
-                    setResult(data)
-                    const user = { id: id, avatar_url: avatar_url, name: name, public_repos: public_repos }
+                    const res = await getUserRepo(request);
+                    const user = { id: id, avatar_url: avatar_url, name: name, public_repos: public_repos, repository: res }
                     await getUserRepo(request);
+                    setResult(user)
                 }
             }
             else {
@@ -114,6 +108,7 @@ export default function User() {
 
     const getUserRepo = async (request) => {
         try {
+            let userRepo;
             if (request) {
                 const response = await axios.get(`${baseUrl}/${request}/repos?client_id=${client_id}&client_secret=${client_secret}`)
                 const data = await response.data
@@ -126,7 +121,9 @@ export default function User() {
                     setTimeout(() => setMessage(''), 5000);
                 }
                 else if (response.status === 200) {
-                    setRepo(data.slice(0, 0 + 5))
+                    userRepo = data.slice(0, 0 + 5)
+                    setRepo(userRepo)
+                    return userRepo
                 }
             }
             else {
@@ -152,20 +149,21 @@ export default function User() {
             <div className="alertMessage">
                 {message && <div className={`message alert alert-${alertType}`} role="alert"><i className={`${iconType}`}></i> {message}</div>}
             </div>
-            <div className="container-fluid mt-5 search-bar">
-                <div className="input-group">
-                    <input style={{ padding: '15px 15px 15px 5px', width: '100%', border: 'none', borderRadius: '5px' }} className="search" placeholder="Search for a user" onKeyUp={(e) => getUserInfo(e)} />
+            {resourceType === 'search' ? <div>
+                <div className="container-fluid mt-5 search-bar">
+                    <div className="input-group">
+                        <input style={{ padding: '15px 15px 15px 5px', width: '100%', border: 'none', borderRadius: '5px' }} className="search" placeholder="Search for a user" onKeyUp={(e) => getUserInfo(e)} />
+                    </div>
                 </div>
-            </div>
-            <div className="container-fluid mt-5 box">
-                {result && <div className="user-box">
-                    <img src={result.avatar_url} />
-                    <h3>Name: {result.name}</h3>
-                    <h3>Repositries: {result.public_repos}</h3>
-                    <button type="button" className="btn btn-primary" onClick={() => storeUser(result)}>Add User</button>
-                </div>}
-            </div>
-            {repo && <UserRepo name={result && result.name} repository={repo && repo} />}
+                {result && <Card className="container-fluid mt-5 box">
+                    <div className="user-box">
+                        <Image src={result.avatar_url} roundedCircle />
+                        <Card.Title>Name: {result.name}</Card.Title>
+                        <Card.Title>Repositries: {result.public_repos}</Card.Title>
+                        <Button type="button" variannt="primary" onClick={() => storeUser(result)}>Add User</Button>
+                    </div>
+                </Card>}
+            </div> : <Container className="my-4"> <UserRepo resourceType={resourceType} getUsers={getUsers} userDeatils={repo} /></Container>}
         </div>
     )
 }
