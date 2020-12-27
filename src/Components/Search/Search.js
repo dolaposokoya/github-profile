@@ -1,11 +1,17 @@
+
 import React, { useState } from 'react';
 import axios from 'axios'
 import UserView from '../UserView/UserView'
 import { Container } from 'react-bootstrap'
 import SearchResult from '../SearchResult/SearchResult'
 import Modal from "../Modal/Modal";
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux';
+import { getUserAction } from '../../Action/GetUserAction'
 
-export default function Search(props) {
+
+
+const Search = (props) => {
 
     const { resourceType } = props
     const baseUrl = 'https://api.github.com/users';
@@ -18,7 +24,7 @@ export default function Search(props) {
     const [repo, setRepo] = useState()
 
 
-    const getUsers = async () => {
+    const getUsers = () => {
         let users;
         if (localStorage.getItem('users') === null) {
             users = []
@@ -46,7 +52,6 @@ export default function Search(props) {
                     const { id, avatar_url, name, public_repos } = data
                     const res = await getUserRepo(request);
                     const user = { id: id, avatar_url: avatar_url, name: name, public_repos: public_repos, repository: res }
-                    await getUserRepo(request);
                     setResult(user)
                 }
             }
@@ -123,3 +128,14 @@ export default function Search(props) {
         </div>
     )
 }
+
+const mapStateToProps = (state) => {
+    const { userData } = state.getUserReducer
+    return {
+        userData
+    }
+}
+
+const mapDispatchToProps = dispatch => bindActionCreators({ getUserAction }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Search)

@@ -1,0 +1,6 @@
+export const REQUEST_USER = 'REQUEST_USER'
+export const SUCCESS = 'SUCCESS'
+export const REQUEST_FAILED = 'REQUEST_USER'
+export const CHECK_USER = 'CHECK_USER'
+export const USER_EXIST = 'USER_EXIST'
+export const CHECK_STORAGE = 'CHECK_STORAGE'

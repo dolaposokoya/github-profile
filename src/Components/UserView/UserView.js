@@ -11,22 +11,17 @@ export default function UserView(props) {
     const [alertType, setAlertType] = useState('')
     const [message, setMessage] = useState('')
 
-    useEffect(async () => {
-        await users()
-        // console.log('Repo', repo)
-        // return () => {
-        //     cleanup
-        // }
+    useEffect(() => {
+        users()
     }, [message])
 
-    const users = async () => {
-        const users = await props.getUsers()
+    const users = () => {
+        const users = props.getUsers()
         setRepo(users)
     }
 
-    const deleteUser = async (id) => {
-        const users = await props.getUsers()
-        console.log('User', users, 'User id', id)
+    const deleteUser = (id) => {
+        const users = props.getUsers()
         users.forEach((user, index) => {
             if (user.id === id) {
                 users.splice(index, 1)
