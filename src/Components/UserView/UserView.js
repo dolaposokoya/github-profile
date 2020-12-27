@@ -3,8 +3,6 @@ import { Card, Button, Image } from 'react-bootstrap'
 import Modal from "../Modal/Modal";
 export default function UserView(props) {
 
-    const { resourceType, userDeatils } = props
-
 
     const [repo, setRepo] = useState([])
     const [iconType, setIconType] = useState('')
@@ -15,11 +13,18 @@ export default function UserView(props) {
         users()
     }, [message])
 
+
+    /**
+     * Get all user from the localstorage
+     */
     const users = () => {
         const users = props.getUsers()
         setRepo(users)
     }
 
+    /**
+     * Delete a particular user from the local storage using their ID
+     */
     const deleteUser = (id) => {
         const users = props.getUsers()
         users.forEach((user, index) => {
@@ -31,7 +36,7 @@ export default function UserView(props) {
         setMessage('User Deleted');
         setAlertType('success')
         setIconType("far fa-check-circle")
-        setTimeout(() => setMessage(''), 5000);
+        setTimeout(() => setMessage(''), 3500);
     }
 
 

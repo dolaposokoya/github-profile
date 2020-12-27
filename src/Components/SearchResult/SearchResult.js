@@ -19,6 +19,10 @@ export default function SearchResult(props) {
         // }
     }, [result])
 
+
+    /**
+     * Check if the returned use already exist
+     */
     const checkUser = () => {
         console.log('Called')
         const users = props.getUsers()
@@ -36,6 +40,9 @@ export default function SearchResult(props) {
         })
     }
 
+    /**
+     * Store the user into localstorage
+     */
     const storeUser = async (user) => {
         const users = props.getUsers()
         const { id, avatar_url, name, repository } = user
@@ -46,7 +53,7 @@ export default function SearchResult(props) {
             checkUser()
             setAlertType('success')
             setIconType("far fa-check-circle")
-            setTimeout(() => setMessage(''), 5000);
+            setTimeout(() => setMessage(''), 3500);
         }
         else if (users.length > 0) {
             users.forEach((item) => {
@@ -55,7 +62,7 @@ export default function SearchResult(props) {
                     checkUser()
                     setAlertType('info')
                     setIconType("fas fa-info-circle")
-                    setTimeout(() => setMessage(''), 5000);
+                    setTimeout(() => setMessage(''), 3500);
                 }
                 else {
                     users.push(user)
@@ -64,11 +71,12 @@ export default function SearchResult(props) {
                     setMessage('User Added');
                     setAlertType('success')
                     setIconType("far fa-check-circle")
-                    setTimeout(() => setMessage(''), 5000);
+                    setTimeout(() => setMessage(''), 3500);
                 }
             })
         }
     }
+    
     return (
         <div>
             {message && <Modal iconType={iconType} message={message} alertType={alertType} />}
@@ -77,7 +85,7 @@ export default function SearchResult(props) {
                     <Image src={result.avatar_url} roundedCircle />
                     <Card.Title>Name: {result.name}</Card.Title>
                     <Card.Title>Repositries: {result.public_repos}</Card.Title>
-                    {action === 'Add User' ? <Button type="button" variant="primary" onClick={() => storeUser(result)}>{action}</Button> : <Button type="button" variant="secondary" disabled>{action}</Button>}
+                    {action === 'Add User' ? <Button type="button" variant="primary" onClick={() => storeUser(result)}>{action}</Button> : <Button type="button" variant="secondary" disabled style={{ pointerEvents: 'none' }}>{action}</Button>}
                 </div>
             </Card>
         </div>

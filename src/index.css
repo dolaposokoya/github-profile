@@ -2,6 +2,10 @@
     --font: 'Roboto Mono', monospace;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 * {
     font-family: var(--font)
 }

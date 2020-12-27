@@ -24,6 +24,9 @@ const Search = (props) => {
     const [repo, setRepo] = useState()
 
 
+    /**
+     * Get all the users present in the localstorage if any return them
+     */
     const getUsers = () => {
         let users;
         if (localStorage.getItem('users') === null) {
@@ -35,6 +38,9 @@ const Search = (props) => {
         return users
     }
 
+    /**
+     * Using the onKeyUp method search for user in the github API and return their data
+     */
     const getUserInfo = async (event) => {
         try {
             let request = event.target.value
@@ -46,7 +52,7 @@ const Search = (props) => {
                     setAlertType('info')
                     setIconType("fas fa-info-circle")
                     setResult('')
-                    setTimeout(() => setMessage(''), 5000);
+                    setTimeout(() => setMessage(''), 3500);
                 }
                 else if (response.status === 200) {
                     const { id, avatar_url, name, public_repos } = data
@@ -61,7 +67,7 @@ const Search = (props) => {
                 setIconType("fas fa-info-circle")
                 setResult('')
                 setRepo('')
-                setTimeout(() => setMessage(''), 5000);
+                setTimeout(() => setMessage(''), 3500);
             }
         }
         catch (error) {
@@ -69,10 +75,13 @@ const Search = (props) => {
             setAlertType('danger')
             setIconType("fas fa-exclamation-triangle")
             setResult('')
-            setTimeout(() => setMessage(''), 5000);
+            setTimeout(() => setMessage(''), 3500);
         }
     }
 
+    /**
+     * Get the repo of the user returned from getUserInfo() function
+     */
     const getUserRepo = async (request) => {
         try {
             let userRepo;
@@ -85,7 +94,7 @@ const Search = (props) => {
                     setIconType("fas fa-info-circle")
                     setResult('')
                     setRepo('')
-                    setTimeout(() => setMessage(''), 5000);
+                    setTimeout(() => setMessage(''), 3500);
                 }
                 else if (response.status === 200) {
                     userRepo = data.slice(0, 0 + 5)
@@ -99,7 +108,7 @@ const Search = (props) => {
                 setIconType("fas fa-info-circle")
                 setResult('')
                 setRepo('')
-                setTimeout(() => setMessage(''), 5000);
+                setTimeout(() => setMessage(''), 3500);
             }
         }
         catch (error) {
@@ -107,7 +116,7 @@ const Search = (props) => {
             setAlertType('danger')
             setIconType("fas fa-exclamation-triangle")
             setResult('')
-            setTimeout(() => setMessage(''), 5000);
+            setTimeout(() => setMessage(''), 3500);
         }
     }
 
@@ -124,7 +133,7 @@ const Search = (props) => {
                     </div>
                 </div>
                 {result && <Container><SearchResult getUsers={getUsers} result={result} /></Container>}
-            </div> : <Container className="my-4"> <UserView resourceType={resourceType} getUsers={getUsers} userDeatils={repo} /></Container>}
+            </div> : <UserView resourceType={resourceType} getUsers={getUsers} userDeatils={repo} />}
         </div>
     )
 }
