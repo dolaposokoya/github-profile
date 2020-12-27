@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Button, Image } from 'react-bootstrap'
 import Modal from "../Modal/Modal";
-export default function UserView(props) {
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux';
+import { getUserAction } from '../../Action/GetUserAction'
+import { storeUserAction } from '../../Action/StoreUserAction'
 
+
+const UserView = (props) => {
 
     const [repo, setRepo] = useState([])
     const [iconType, setIconType] = useState('')
@@ -18,30 +23,33 @@ export default function UserView(props) {
      * Get all user from the localstorage
      */
     const users = () => {
-        const users = props.getUsers()
-        setRepo(users)
+        props.getUserAction(res => {
+            setRepo(res.users)
+        })
     }
 
     /**
      * Delete a particular user from the local storage using their ID
      */
     const deleteUser = (id) => {
-        const users = props.getUsers()
-        users.forEach((user, index) => {
-            if (user.id === id) {
-                users.splice(index, 1)
-            }
+        props.getUserAction(response => {
+            response.users.forEach((user, index) => {
+                if (user.id === id) {
+                    response.users.splice(index, 1)
+                }
+            })
+            localStorage.setItem('users', JSON.stringify(response.users))
+            setMessage('User Deleted');
+            setAlertType('success')
+            setIconType("far fa-check-circle")
+            setTimeout(() => setMessage(''), 3500);
+            console.log('Res', props)
         })
-        localStorage.setItem('users', JSON.stringify(users))
-        setMessage('User Deleted');
-        setAlertType('success')
-        setIconType("far fa-check-circle")
-        setTimeout(() => setMessage(''), 3500);
     }
 
 
     return (
-        <div>
+        <div style={{marginBottom: '100px'}}>
             {message && <Modal iconType={iconType} message={message} alertType={alertType} />}
             {repo && repo.map((item, index) => {
                 return (
@@ -72,3 +80,16 @@ export default function UserView(props) {
         </div>
     )
 }
+
+const mapStateToProps = (state) => {
+    const { users } = state.getUserReducer
+    const { user } = state.storeUserReducer
+    return {
+        users,
+        user
+    }
+}
+
+const mapDispatchToProps = dispatch => bindActionCreators({ getUserAction, storeUserAction }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserView)

@@ -2,25 +2,24 @@ import { SUCCESS, CHECK_STORAGE, USER_EXIST } from "./ActionTypes";
 
 export const storeUserAction = (user, callback) => {
     return dispatch => {
-        const { id, avatar_url, name, repository } = user
         const users = JSON.parse(localStorage.getItem('users'))
-        if (user.length <= 0) {
-            dispatch({ type: CHECK_STORAGE })
-            users.push({ id, avatar_url, name, repository })
+        if (users.length === 0) {
+            users.push(user)
             localStorage.setItem('users', JSON.stringify(users))
-            callback({ success: true, data: users, message: 'User Added' })
+            dispatch({ type: CHECK_STORAGE, payload: user })
+            callback({ success: true, data: user, message: 'User Added' })
         }
         else if (users.length > 0) {
             users.forEach(item => {
-                if (item.id === id) {
-                    dispatch({ type: USER_EXIST })
-                    callback({ success: true, data: users, message: 'User Exist' })
+                if (item.id === user.id) {
+                    dispatch({ type: USER_EXIST, payload: user })
+                    callback({ success: false, data: user, message: 'User Present' })
                 }
                 else {
-                    dispatch({ type: SUCCESS })
-                    users.push({ id, avatar_url, name, repository })
+                    users.push(user)
                     localStorage.setItem('users', JSON.stringify(users))
-                    callback({ success: true, data: users, message: 'User Added' })
+                    dispatch({ type: SUCCESS, payload: user })
+                    callback({ success: true, data: user, message: 'User Added' })
                 }
             })
         }

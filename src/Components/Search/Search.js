@@ -5,13 +5,13 @@ import UserView from '../UserView/UserView'
 import { Container } from 'react-bootstrap'
 import SearchResult from '../SearchResult/SearchResult'
 import Modal from "../Modal/Modal";
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux';
-import { getUserAction } from '../../Action/GetUserAction'
+// import { connect } from 'react-redux'
+// import { bindActionCreators } from 'redux';
+// import { getUserAction } from '../../Action/GetUserAction'
 
 
 
-const Search = (props) => {
+export default function Search(props) {
 
     const { resourceType } = props
     const baseUrl = 'https://api.github.com/users';
@@ -21,22 +21,7 @@ const Search = (props) => {
     const [alertType, setAlertType] = useState('')
     const [message, setMessage] = useState('')
     const [result, setResult] = useState()
-    const [repo, setRepo] = useState()
 
-
-    /**
-     * Get all the users present in the localstorage if any return them
-     */
-    const getUsers = () => {
-        let users;
-        if (localStorage.getItem('users') === null) {
-            users = []
-        }
-        else {
-            users = JSON.parse(localStorage.getItem('users'))
-        }
-        return users
-    }
 
     /**
      * Using the onKeyUp method search for user in the github API and return their data
@@ -66,7 +51,6 @@ const Search = (props) => {
                 setAlertType('info')
                 setIconType("fas fa-info-circle")
                 setResult('')
-                setRepo('')
                 setTimeout(() => setMessage(''), 3500);
             }
         }
@@ -93,12 +77,10 @@ const Search = (props) => {
                     setAlertType('info')
                     setIconType("fas fa-info-circle")
                     setResult('')
-                    setRepo('')
                     setTimeout(() => setMessage(''), 3500);
                 }
                 else if (response.status === 200) {
                     userRepo = data.slice(0, 0 + 5)
-                    setRepo(userRepo)
                     return userRepo
                 }
             }
@@ -107,7 +89,6 @@ const Search = (props) => {
                 setAlertType('info')
                 setIconType("fas fa-info-circle")
                 setResult('')
-                setRepo('')
                 setTimeout(() => setMessage(''), 3500);
             }
         }
@@ -132,19 +113,19 @@ const Search = (props) => {
                         <input style={{ padding: '15px 15px 15px 5px', width: '100%', border: 'none', borderRadius: '5px' }} className="search" placeholder="Search for a user" onKeyUp={(e) => getUserInfo(e)} />
                     </div>
                 </div>
-                {result && <Container><SearchResult getUsers={getUsers} result={result} /></Container>}
-            </div> : <UserView resourceType={resourceType} getUsers={getUsers} userDeatils={repo} />}
+                {result && <Container><SearchResult result={result} /></Container>}
+            </div> : <> <UserView resourceType={resourceType} /></>}
         </div>
     )
 }
 
-const mapStateToProps = (state) => {
-    const { userData } = state.getUserReducer
-    return {
-        userData
-    }
-}
+// const mapStateToProps = (state) => {
+//     const { userData } = state.getUserReducer
+//     return {
+//         userData
+//     }
+// }
 
-const mapDispatchToProps = dispatch => bindActionCreators({ getUserAction }, dispatch);
+// const mapDispatchToProps = dispatch => bindActionCreators({ getUserAction }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(Search)
+// export default connect(mapStateToProps, mapDispatchToProps)(Search)
