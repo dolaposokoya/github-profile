@@ -69,7 +69,7 @@ export default function Search(props) {
         try {
             let userRepo;
             if (request) {
-                const response = await axios.get(`${baseUrl}/${request}/repos?client_id=${client_id}&client_secret=${client_secret}`)
+                const response = await axios.get(`${baseUrl}/${request}/repos?client_id=${REACT_APP_CLIENT_ID}&client_secret=${REACT_APP_CLIENT_SECRET}`)
                 const data = await response.data
                 if (!data) {
                     setMessage('No Repository found');
