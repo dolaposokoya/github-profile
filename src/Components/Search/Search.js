@@ -15,8 +15,7 @@ export default function Search(props) {
 
     const { resourceType } = props
     const baseUrl = 'https://api.github.com/users';
-    const client_id = '192c6b5772044f48a9ba'
-    const client_secret = '40c2eefc4ffaa2cf7544e3ac83f1939e8d225d66'
+    const { REACT_APP_CLIENT_ID, REACT_APP_CLIENT_SECRET } = process.env
     const [iconType, setIconType] = useState('')
     const [alertType, setAlertType] = useState('')
     const [message, setMessage] = useState('')
@@ -30,7 +29,7 @@ export default function Search(props) {
         try {
             let request = event.target.value
             if (request) {
-                const response = await axios.get(`${baseUrl}/${request}?client_id=${client_id}&client_secret=${client_secret}`)
+                const response = await axios.get(`${baseUrl}/${request}?client_id=${REACT_APP_CLIENT_ID}&client_secret=${REACT_APP_CLIENT_SECRET}`)
                 const data = await response.data
                 if (!data) {
                     setMessage('No Data found');
