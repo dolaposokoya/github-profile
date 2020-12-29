@@ -11,12 +11,14 @@ import Modal from "../Modal/Modal";
 
 
 
+const { REACT_APP_CLIENT_ID, REACT_APP_CLIENT_SECRET } = process.env
+
 export default function Search(props) {
 
     const { resourceType } = props
     const baseUrl = 'https://api.github.com/users';
-    const { REACT_APP_CLIENT_ID, REACT_APP_CLIENT_SECRET } = process.env
     const [iconType, setIconType] = useState('')
+    const [loading, setLoading] = useState(true)
     const [alertType, setAlertType] = useState('')
     const [message, setMessage] = useState('')
     const [result, setResult] = useState()
@@ -27,6 +29,7 @@ export default function Search(props) {
      */
     const getUserInfo = async (event) => {
         try {
+            setLoading(true)
             let request = event.target.value
             if (request) {
                 const response = await axios.get(`${baseUrl}/${request}?client_id=${REACT_APP_CLIENT_ID}&client_secret=${REACT_APP_CLIENT_SECRET}`)
@@ -36,6 +39,7 @@ export default function Search(props) {
                     setAlertType('info')
                     setIconType("fas fa-info-circle")
                     setResult('')
+                    setLoading(false)
                     setTimeout(() => setMessage(''), 3500);
                 }
                 else if (response.status === 200) {
@@ -43,6 +47,7 @@ export default function Search(props) {
                     const res = await getUserRepo(request);
                     const user = { id: id, avatar_url: avatar_url, name: name, public_repos: public_repos, repository: res }
                     setResult(user)
+                    setLoading(false)
                 }
             }
             else {
@@ -50,6 +55,7 @@ export default function Search(props) {
                 setAlertType('info')
                 setIconType("fas fa-info-circle")
                 setResult('')
+                setLoading(false)
                 setTimeout(() => setMessage(''), 3500);
             }
         }
@@ -58,6 +64,7 @@ export default function Search(props) {
             setAlertType('danger')
             setIconType("fas fa-exclamation-triangle")
             setResult('')
+            setLoading(false)
             setTimeout(() => setMessage(''), 3500);
         }
     }
@@ -67,6 +74,7 @@ export default function Search(props) {
      */
     const getUserRepo = async (request) => {
         try {
+            setLoading(true)
             let userRepo;
             if (request) {
                 const response = await axios.get(`${baseUrl}/${request}/repos?client_id=${REACT_APP_CLIENT_ID}&client_secret=${REACT_APP_CLIENT_SECRET}`)
@@ -76,10 +84,12 @@ export default function Search(props) {
                     setAlertType('info')
                     setIconType("fas fa-info-circle")
                     setResult('')
+                    setLoading(false)
                     setTimeout(() => setMessage(''), 3500);
                 }
                 else if (response.status === 200) {
                     userRepo = data.slice(0, 0 + 5)
+                    setLoading(false)
                     return userRepo
                 }
             }
@@ -88,6 +98,7 @@ export default function Search(props) {
                 setAlertType('info')
                 setIconType("fas fa-info-circle")
                 setResult('')
+                setLoading(false)
                 setTimeout(() => setMessage(''), 3500);
             }
         }
@@ -96,6 +107,7 @@ export default function Search(props) {
             setAlertType('danger')
             setIconType("fas fa-exclamation-triangle")
             setResult('')
+            setLoading(false)
             setTimeout(() => setMessage(''), 3500);
         }
     }
@@ -113,18 +125,8 @@ export default function Search(props) {
                     </div>
                 </div>
                 {result && <Container><SearchResult result={result} /></Container>}
-            </div> : <> <UserView resourceType={resourceType} /></>}
+            </div> : <>{loading === false ? <UserView resourceType={resourceType} /> : null} </>}
         </div>
     )
 }
 
-// const mapStateToProps = (state) => {
-//     const { userData } = state.getUserReducer
-//     return {
-//         userData
-//     }
-// }
-
-// const mapDispatchToProps = dispatch => bindActionCreators({ getUserAction }, dispatch);
-
-// export default connect(mapStateToProps, mapDispatchToProps)(Search)

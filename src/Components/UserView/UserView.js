@@ -16,7 +16,7 @@ const UserView = (props) => {
 
     useEffect(() => {
         users()
-    }, [])
+    }, [message])
 
 
     /**

@@ -11,6 +11,7 @@ function SearchResult(props) {
     const [iconType, setIconType] = useState('')
     const [alertType, setAlertType] = useState('')
     const [message, setMessage] = useState('')
+    const [loading, setLoading] = useState(true)
     const [action, setAction] = useState('Add User')
 
 
@@ -28,14 +29,17 @@ function SearchResult(props) {
      * Check if the returned use already exist
      */
     function checkUser() {
+        setLoading(true)
         props.getUserAction(response => {
             response.users.map(item => {
                 if (item.id === result.id) {
                     setAction('Already added')
+                    setLoading(false)
                     return true
                 }
                 else {
                     setAction('Add User')
+                    setLoading(false)
                     return false
                 }
             })
@@ -46,22 +50,25 @@ function SearchResult(props) {
      * Store the user into localstorage
      */
     const storeUser = async (user) => {
+        setLoading(true)
         props.getUserAction(response => {
             const users = response.users
             if (users.length === 0 || users.length > 0) {
                 props.storeUserAction(user, users, response => {
                     if (response.success === true) {
-                        setMessage(response.message);
                         checkUser()
+                        setMessage(response.message);
                         setAlertType('success')
                         setIconType("far fa-check-circle")
+                        setLoading(false)
                         setTimeout(() => setMessage(''), 3500);
                     }
                     else {
-                        setMessage(response.message);
                         checkUser()
+                        setMessage(response.message);
                         setAlertType('info')
                         setIconType("fas fa-info-circle")
+                        setLoading(false)
                         setTimeout(() => setMessage(''), 3500);
                     }
                 })
@@ -77,7 +84,7 @@ function SearchResult(props) {
                     <Image src={result.avatar_url} roundedCircle />
                     <Card.Title>Name: {result.name === null ? 'Name not  defined' : result.name}</Card.Title>
                     <Card.Title>Repositries: {result.public_repos}</Card.Title>
-                    {action === 'Add User' ? <Button type="button" variant="primary" onClick={() => storeUser(result)}>{action}</Button> : <Button type="button" variant="secondary" disabled style={{ pointerEvents: 'none' }}>{action}</Button>}
+                    {loading === false && action === 'Add User' ? <Button type="button" variant="primary" onClick={() => storeUser(result)}>{action}</Button> : <Button type="button" variant="secondary" disabled style={{ pointerEvents: 'none' }}>{action}</Button>}
                 </div>
             </Card>
         </div>
