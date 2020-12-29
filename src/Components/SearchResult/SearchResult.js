@@ -27,7 +27,7 @@ function SearchResult(props) {
     /**
      * Check if the returned use already exist
      */
-    const checkUser = () => {
+    function checkUser() {
         props.getUserAction(response => {
             response.users.map(item => {
                 if (item.id === result.id) {
@@ -47,23 +47,25 @@ function SearchResult(props) {
      */
     const storeUser = async (user) => {
         props.getUserAction(response => {
-            let users = response.users;
-            props.storeUserAction(user, response => {
-                if (response.success === true) {
-                    setMessage(response.message);
-                    checkUser()
-                    setAlertType('success')
-                    setIconType("far fa-check-circle")
-                    setTimeout(() => setMessage(''), 3500);
-                }
-                else {
-                    setMessage(response.message);
-                    checkUser()
-                    setAlertType('info')
-                    setIconType("fas fa-info-circle")
-                    setTimeout(() => setMessage(''), 3500);
-                }
-            })
+            const users = response.users
+            if (users.length === 0 || users.length > 0) {
+                props.storeUserAction(user, users, response => {
+                    if (response.success === true) {
+                        setMessage(response.message);
+                        checkUser()
+                        setAlertType('success')
+                        setIconType("far fa-check-circle")
+                        setTimeout(() => setMessage(''), 3500);
+                    }
+                    else {
+                        setMessage(response.message);
+                        checkUser()
+                        setAlertType('info')
+                        setIconType("fas fa-info-circle")
+                        setTimeout(() => setMessage(''), 3500);
+                    }
+                })
+            }
         })
     }
 
@@ -72,7 +74,6 @@ function SearchResult(props) {
             {message && <Modal iconType={iconType} message={message} alertType={alertType} />}
             <Card className="mt-5 user-box">
                 <div>
-                    {console.log(result.name)}
                     <Image src={result.avatar_url} roundedCircle />
                     <Card.Title>Name: {result.name === null ? 'Name not  defined' : result.name}</Card.Title>
                     <Card.Title>Repositries: {result.public_repos}</Card.Title>
@@ -86,7 +87,6 @@ function SearchResult(props) {
 const mapStateToProps = (state) => {
     const { users } = state.getUserReducer
     const { user } = state.storeUserReducer
-    console.log('Users', user)
     return {
         users,
         user

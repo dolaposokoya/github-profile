@@ -11,7 +11,7 @@ export const getUserAction = (callback) => {
             else {
                 users = JSON.parse(localStorage.getItem('users'))
                 dispatch({ type: SUCCESS, payload: users })
-                callback({ success: true, users: users })
+                callback({ success: true, users: users})
             }
         }
         catch (error) {

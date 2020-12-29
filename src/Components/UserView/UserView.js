@@ -16,13 +16,13 @@ const UserView = (props) => {
 
     useEffect(() => {
         users()
-    }, [message])
+    }, [])
 
 
     /**
      * Get all user from the localstorage
      */
-    const users = () => {
+    function users() {
         props.getUserAction(res => {
             setRepo(res.users)
         })
@@ -43,13 +43,12 @@ const UserView = (props) => {
             setAlertType('success')
             setIconType("far fa-check-circle")
             setTimeout(() => setMessage(''), 3500);
-            console.log('Res', props)
         })
     }
 
 
     return (
-        <div style={{marginBottom: '100px'}}>
+        <div style={{ marginBottom: '100px' }}>
             {message && <Modal iconType={iconType} message={message} alertType={alertType} />}
             {repo && repo.map((item, index) => {
                 return (
