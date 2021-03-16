@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Search from '../Components/Search/Search'
+import '../index.css'
 
 
 function App() {

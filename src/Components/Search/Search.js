@@ -60,7 +60,7 @@ export default function Search(props) {
             }
         }
         catch (error) {
-            setMessage('Something went wrong');
+            setMessage(error.message);
             setAlertType('danger')
             setIconType("fas fa-exclamation-triangle")
             setResult('')
@@ -103,7 +103,7 @@ export default function Search(props) {
             }
         }
         catch (error) {
-            setMessage('Something went wrong');
+            setMessage(error.message);
             setAlertType('danger')
             setIconType("fas fa-exclamation-triangle")
             setResult('')
@@ -115,14 +115,18 @@ export default function Search(props) {
     return (
         <div>
             {message && <Modal iconType={iconType} message={message} alertType={alertType} />}
-            <div className="alertMessage">
-                {message && <div className={`message alert alert-${alertType}`} role="alert"><i className={`${iconType}`}></i> {message}</div>}
-            </div>
             {resourceType === 'search' ? <div>
                 <div className="container-fluid mt-5 search-bar">
-                    <div className="input-group">
-                        <input style={{ padding: '15px 15px 15px 5px', width: '100%', border: 'none', borderRadius: '5px' }} className="search" placeholder="Search for a user" onKeyUp={(e) => getUserInfo(e)} />
-                    </div>
+                    <form className="col s12">
+                        <div className="row">
+                            <div className="input-field col s6">
+                                <i class="material-icons prefix" style={{ color: '#26a69a' }}>account_circle</i>
+                                <input id="icon_prefix" type="text" className="validate" onKeyUp={(e) => getUserInfo(e)} style={{ width: '100%', borderColor: '#26a69a' }} />
+                                <label for="icon_prefix">Search for a user</label>
+                                {/* <span className="helper-text" data-error={message} data-success="right" style={{ color: 'red' }}></span> */}
+                            </div>
+                        </div>
+                    </form>
                 </div>
                 {result && <Container><SearchResult result={result} /></Container>}
             </div> : <>{loading === false ? <UserView resourceType={resourceType} /> : null} </>}

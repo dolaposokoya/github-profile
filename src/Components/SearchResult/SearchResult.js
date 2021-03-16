@@ -64,7 +64,7 @@ function SearchResult(props) {
                         setIconType("fas fa-info-circle")
                         setTimeout(() => setMessage(''), 3500);
                     }
-                })
+                }) 
             }
         })
     }
