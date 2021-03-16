@@ -56,7 +56,7 @@ function SearchResult(props) {
                         setAlertType('success')
                         setIconType("far fa-check-circle")
                         setTimeout(() => setMessage(''), 3500);
-                    }
+                    } 
                     else {
                         checkUser()
                         setMessage(response.message);
